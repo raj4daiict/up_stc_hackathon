@@ -13,12 +13,13 @@ import { HospitalPanel } from './components/HospitalPanel';
 import { AICallCenter } from './components/AICallCenter';
 import { ArchitectureBanner } from './components/ArchitectureBanner';
 import { PatientProfile } from './components/PatientProfile';
+import { CEOAnalytics } from './components/CEOAnalytics';
 
 const INITIAL_MOTHERS = generateMothers(40);
 const INITIAL_HOSPITALS = generateHospitals();
 const INITIAL_AMBULANCES = generateAmbulances();
 
-type TabKey = 'dashboard' | 'calls' | 'hospitals' | 'patient';
+type TabKey = 'dashboard' | 'calls' | 'hospitals' | 'patient' | 'ceo';
 
 function App() {
   const [mothers, setMothers] = useState<Mother[]>(INITIAL_MOTHERS);
@@ -124,30 +125,29 @@ function App() {
 
       {/* Scrollable content area between header and footer */}
       <div style={{ flex: 1, overflow: 'auto' }}>
-        <ArchitectureBanner />
-
-        <StatsCards
-          mothers={mothers}
-          tasks={tasks}
-          calls={calls}
-          hospitals={hospitals}
-          ambulances={ambulances}
-        />
-
-        <Charts mothers={mothers} tasks={tasks} events={events} calls={calls} />
+        {activeTab !== 'ceo' && (
+          <>
+            <ArchitectureBanner />
+            <StatsCards mothers={mothers} tasks={tasks} calls={calls} hospitals={hospitals} ambulances={ambulances} />
+            <Charts mothers={mothers} tasks={tasks} events={events} calls={calls} />
+          </>
+        )}
 
         {/* Tab Navigation */}
-        <div style={{ padding: '0 24px 12px', display: 'flex', gap: 4 }}>
+        <div style={{ padding: activeTab === 'ceo' ? '16px 24px 12px' : '0 24px 12px', display: 'flex', gap: 4 }}>
           {([
             { key: 'dashboard' as TabKey, label: '📊 Live Dashboard' },
             { key: 'patient' as TabKey, label: '👤 Patient Profile' },
             { key: 'calls' as TabKey, label: '📞 AI Call Center' },
             { key: 'hospitals' as TabKey, label: '🏥 Hospitals & Ambulances' },
+            { key: 'ceo' as TabKey, label: '📈 CEO Analytics' },
           ]).map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{
               padding: '8px 18px', borderRadius: 6, border: 'none', cursor: 'pointer',
               fontSize: 12, fontWeight: 600,
-              background: activeTab === tab.key ? '#3b82f6' : 'rgba(255,255,255,0.05)',
+              background: activeTab === tab.key
+                ? tab.key === 'ceo' ? 'linear-gradient(135deg, #f97316, #ef4444)' : '#3b82f6'
+                : 'rgba(255,255,255,0.05)',
               color: activeTab === tab.key ? 'white' : '#94a3b8',
               transition: 'all 0.2s',
             }}>
@@ -161,8 +161,8 @@ function App() {
           {activeTab === 'dashboard' && (
             <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr 1fr 300px', gap: 12, height: 520 }}>
               <MothersList mothers={mothers} selectedMotherId={selectedMotherId} onSelect={handleSelectMother} onOpenProfile={handleOpenPatientProfile} />
-              <EventTimeline events={events} />
-              <TaskBoard tasks={tasks} />
+              <EventTimeline events={events} onOpenProfile={handleOpenPatientProfile} />
+              <TaskBoard tasks={tasks} onOpenProfile={handleOpenPatientProfile} />
               <MotherDetail mother={selectedMother} tasks={tasks} events={events} />
             </div>
           )}
@@ -180,7 +180,7 @@ function App() {
           {activeTab === 'calls' && (
             <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: 12, height: 520 }}>
               <MothersList mothers={mothers} selectedMotherId={selectedMotherId} onSelect={handleSelectMother} onOpenProfile={handleOpenPatientProfile} />
-              <AICallCenter calls={calls} />
+              <AICallCenter calls={calls} onOpenProfile={handleOpenPatientProfile} />
             </div>
           )}
           {activeTab === 'hospitals' && (
@@ -189,6 +189,9 @@ function App() {
               <HospitalPanel hospitals={hospitals} ambulances={ambulances} />
               <MotherDetail mother={selectedMother} tasks={tasks} events={events} />
             </div>
+          )}
+          {activeTab === 'ceo' && (
+            <CEOAnalytics mothers={mothers} tasks={tasks} events={events} calls={calls} hospitals={hospitals} />
           )}
         </div>
       </div>
