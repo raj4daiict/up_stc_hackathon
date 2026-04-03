@@ -6,14 +6,14 @@ frontend:
         - nvm install 20
         - nvm use 20
         - node --version
-        - cd maternal-health-ai && npm ci
+        - npm ci
     build:
       commands:
-        - cd maternal-health-ai && npm run build
+        - npm run build
   artifacts:
-    baseDirectory: maternal-health-ai/dist
+    baseDirectory: dist
     files:
       - '**/*'
   cache:
     paths:
-      - maternal-health-ai/node_modules/**/*
+      - node_modules/**/*
