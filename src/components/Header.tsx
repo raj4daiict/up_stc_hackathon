@@ -42,8 +42,9 @@ export const Header: React.FC<HeaderProps> = ({
             <div style={{
               width: 36, height: 36, borderRadius: 9, background: 'rgba(255,255,255,0.2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 14, fontWeight: 800, color: '#fff', border: '2px solid rgba(255,255,255,0.3)',
-            }}>UP</div>
+              fontSize: 13, fontWeight: 800, color: '#fff', border: '2px solid rgba(255,255,255,0.3)',
+              letterSpacing: -0.5,
+            }}>M</div>
           ) : (
             <div style={{
               width: 36, height: 36, borderRadius: 9,
@@ -55,10 +56,10 @@ export const Header: React.FC<HeaderProps> = ({
           )}
           <div>
             <h1 style={{ fontSize: 16, fontWeight: 700, color: headerTextColor, lineHeight: 1.2 }}>
-              {isUPSTC ? 'State Transformation Commission' : 'UP Maternal Health AI Platform'}
+              {isUPSTC ? 'MatrAI' : 'MatrAI'}
             </h1>
             <p style={{ fontSize: 10, color: headerSubColor, fontWeight: 500 }}>
-              {isUPSTC ? 'Maternal Health Monitoring · Government of Uttar Pradesh' : 'Agentic AI · Maternal Risk Governance · Every Pregnancy Visible'}
+              {isUPSTC ? 'AI-Powered Maternal Health Platform · Government of Uttar Pradesh' : 'Agentic AI · Maternal Risk Governance · Every Pregnancy Visible'}
             </p>
           </div>
           <div style={{

@@ -139,7 +139,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div>
           <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-            Monitoring Dashboard — {periodLabel}
+            MatrAI Monitoring Dashboard — {periodLabel}
           </h2>
           <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
             Statewide maternal health governance overview for leadership review

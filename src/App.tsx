@@ -202,7 +202,7 @@ function App() {
         background: 'var(--bg-secondary)', flexShrink: 0,
       }}>
         <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>
-          Every pregnancy visible · Every HRP actionable · Every follow-up traceable · Every delivery prepared
+          MatrAI · Every pregnancy visible · Every HRP actionable · Every follow-up traceable · Every delivery prepared
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>

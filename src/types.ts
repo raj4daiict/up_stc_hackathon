@@ -1,5 +1,5 @@
 // ============================================================
-// UP Maternal Health AI Platform — Type Definitions
+// MatrAI — Type Definitions
 // ============================================================
 
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
