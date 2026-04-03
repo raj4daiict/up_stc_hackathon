@@ -17,7 +17,7 @@ const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; la
 
 const SENTIMENT_CONFIG: Record<string, { color: string; emoji: string }> = {
   positive: { color: '#10b981', emoji: '😊' },
-  neutral: { color: '#94a3b8', emoji: '😐' },
+  neutral: { color: 'var(--text-secondary)', emoji: '😐' },
   concerned: { color: '#f59e0b', emoji: '😟' },
   distressed: { color: '#ef4444', emoji: '😰' },
 };
@@ -38,7 +38,7 @@ export const AICallCenter: React.FC<AICallCenterProps> = ({ calls, onOpenProfile
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
           <Phone size={16} color="#06b6d4" />
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#f1f5f9' }}>AI Call Center</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>AI Call Center</span>
           <span style={{ fontSize: 9, color: '#06b6d4', marginLeft: 4, fontWeight: 500 }}>Amazon Connect</span>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
@@ -79,7 +79,7 @@ export const AICallCenter: React.FC<AICallCenterProps> = ({ calls, onOpenProfile
                   {statusCfg.label}
                 </span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 9, color: '#64748b' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 9, color: 'var(--text-muted)' }}>
                 <span>📞 {call.callType.replace(/_/g, ' ')}</span>
                 <span>🗣️ {call.language}</span>
                 {call.duration && <span>⏱️ {Math.floor(call.duration / 60)}m {call.duration % 60}s</span>}
@@ -93,7 +93,7 @@ export const AICallCenter: React.FC<AICallCenterProps> = ({ calls, onOpenProfile
                 <div style={{
                   marginTop: 4, padding: '4px 8px', borderRadius: 4,
                   background: 'rgba(6,182,212,0.06)', borderLeft: '2px solid rgba(6,182,212,0.3)',
-                  fontSize: 10, color: '#94a3b8', lineHeight: 1.4,
+                  fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4,
                 }}>
                   <MessageSquare size={8} style={{ marginRight: 4, verticalAlign: 'middle' }} color="#06b6d4" />
                   {call.summary}
@@ -103,7 +103,7 @@ export const AICallCenter: React.FC<AICallCenterProps> = ({ calls, onOpenProfile
           );
         })}
         {calls.length === 0 && (
-          <div style={{ textAlign: 'center', padding: 30, color: '#64748b', fontSize: 11 }}>
+          <div style={{ textAlign: 'center', padding: 30, color: 'var(--text-muted)', fontSize: 11 }}>
             AI calls will appear here during simulation
           </div>
         )}

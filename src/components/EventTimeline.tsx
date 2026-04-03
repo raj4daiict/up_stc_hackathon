@@ -52,13 +52,13 @@ export const EventTimeline: React.FC<EventTimelineProps> = ({ events, onOpenProf
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Bot size={16} color="#3b82f6" />
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#f1f5f9' }}>AI Activity Feed</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>AI Activity Feed</span>
         </div>
-        <span style={{ fontSize: 11, color: '#64748b' }}>{events.length} events</span>
+        <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{events.length} events</span>
       </div>
       <div ref={scrollRef} style={{ flex: 1, overflow: 'auto', padding: '8px 12px' }}>
         {displayEvents.map((event, idx) => {
-          const config = EVENT_CONFIG[event.type] || { icon: Bot, color: '#94a3b8', label: event.type };
+          const config = EVENT_CONFIG[event.type] || { icon: Bot, color: 'var(--text-secondary)', label: event.type };
           const Icon = config.icon;
           return (
             <div key={event.id} className={idx === 0 ? 'animate-slide-in' : ''} style={{
@@ -91,11 +91,11 @@ export const EventTimeline: React.FC<EventTimelineProps> = ({ events, onOpenProf
                         {event.riskLevel.toUpperCase()}
                       </span>
                     )}
-                    <span style={{ fontSize: 9, color: '#64748b', marginLeft: 'auto' }}>
+                    <span style={{ fontSize: 9, color: 'var(--text-muted)', marginLeft: 'auto' }}>
                       {new Date(event.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
-                  <p style={{ fontSize: 11, color: '#e2e8f0', lineHeight: 1.4, marginBottom: 4 }}>
+                  <p style={{ fontSize: 11, color: 'var(--text-primary)', lineHeight: 1.4, marginBottom: 4 }}>
                     {event.motherName && event.motherId && onOpenProfile ? (
                       <>
                         {event.description.split(event.motherName).map((part, pi, arr) => (
@@ -127,7 +127,7 @@ export const EventTimeline: React.FC<EventTimelineProps> = ({ events, onOpenProf
           );
         })}
         {events.length === 0 && (
-          <div style={{ textAlign: 'center', padding: 40, color: '#64748b' }}>
+          <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>
             <Bot size={32} style={{ marginBottom: 8, opacity: 0.3 }} />
             <p style={{ fontSize: 12 }}>Press Play to start the simulation</p>
           </div>

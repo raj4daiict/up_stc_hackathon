@@ -25,14 +25,14 @@ export const ArchitectureBanner: React.FC = () => {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <Cloud size={16} color="#8b5cf6" />
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#e2e8f0' }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)' }}>
             AWS Architecture: Agentic AI Maternal Health Platform
           </span>
-          <span style={{ fontSize: 10, color: '#64748b' }}>
+          <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>
             {expanded ? 'Click to collapse' : 'Click to view AWS services powering this platform'}
           </span>
         </div>
-        {expanded ? <ChevronUp size={16} color="#94a3b8" /> : <ChevronDown size={16} color="#94a3b8" />}
+        {expanded ? <ChevronUp size={16} color="var(--text-muted)" /> : <ChevronDown size={16} color="var(--text-muted)" />}
       </button>
 
       {expanded && (
@@ -54,8 +54,8 @@ export const ArchitectureBanner: React.FC = () => {
                   <s.icon size={18} color={s.color} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#e2e8f0' }}>{s.name}</div>
-                  <div style={{ fontSize: 9, color: '#94a3b8' }}>{s.desc}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-primary)' }}>{s.name}</div>
+                  <div style={{ fontSize: 9, color: 'var(--text-secondary)' }}>{s.desc}</div>
                 </div>
               </div>
             ))}
@@ -65,7 +65,7 @@ export const ArchitectureBanner: React.FC = () => {
             padding: 12, borderRadius: 8, background: 'rgba(255,255,255,0.02)',
             border: '1px solid var(--border)',
           }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
               AI-Driven Workflow
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, flexWrap: 'wrap' }}>
@@ -83,8 +83,8 @@ export const ArchitectureBanner: React.FC = () => {
               ].map((step, i) => (
                 <span key={i} style={{
                   fontSize: 9, padding: '3px 8px', borderRadius: 4,
-                  background: i === 0 ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.05)',
-                  color: i === 0 ? '#3b82f6' : '#94a3b8',
+                  background: i === 0 ? 'rgba(59,130,246,0.15)' : 'var(--tab-bg)',
+                  color: i === 0 ? '#3b82f6' : 'var(--text-secondary)',
                   border: `1px solid ${i === 0 ? 'rgba(59,130,246,0.3)' : 'transparent'}`,
                   fontWeight: step.startsWith('→') ? 400 : 600,
                 }}>

@@ -8,6 +8,7 @@ import {
   Heart, Users, ClipboardList, Building2, ArrowUpCircle, Bot
 } from 'lucide-react';
 import type { Mother, Task, TimelineEvent, AICallRecord, Hospital } from '../types';
+import { UPDistrictMap } from './UPDistrictMap';
 
 type Period = 'week' | 'month' | 'year';
 
@@ -54,6 +55,7 @@ function generateDistrictComparison() {
 
 export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
   const [period, setPeriod] = useState<Period>('month');
+  const [selectedMapDistrict, setSelectedMapDistrict] = useState<string | null>(null);
 
   const historical = useMemo(() => generateHistorical(period), [period]);
   const districts = useMemo(() => generateDistrictComparison(), []);
@@ -70,8 +72,8 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
   const ancCoverageRate = (totalANC + totalMissed) > 0 ? Math.round((totalANC / (totalANC + totalMissed)) * 100) : 0;
 
   const tooltipStyle = {
-    contentStyle: { background: '#1e293b', border: '1px solid #334155', borderRadius: 8, fontSize: 11, boxShadow: '0 8px 24px rgba(0,0,0,0.4)' },
-    labelStyle: { color: '#94a3b8', fontWeight: 600 as const },
+    contentStyle: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 11, boxShadow: 'var(--shadow-lg)', color: 'var(--text-primary)' },
+    labelStyle: { color: 'var(--text-secondary)', fontWeight: 600 as const },
   };
 
   const periodLabel = period === 'week' ? 'This Week' : period === 'month' ? 'This Month' : 'This Year';
@@ -82,7 +84,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
     { name: 'Hypertension', value: 19, color: '#f97316' },
     { name: 'Heart Disease', value: 9, color: '#ec4899' },
     { name: 'Sepsis', value: 10, color: '#f59e0b' },
-    { name: 'Others', value: 42, color: '#64748b' },
+    { name: 'Others', value: 42, color: 'var(--text-muted)' },
   ];
 
   const KPI = ({ icon: Icon, label, value, sub, trend, trendUp, color }: {
@@ -100,11 +102,11 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
         }}>
           <Icon size={16} color={color} />
         </div>
-        <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 500 }}>{label}</span>
+        <span style={{ fontSize: 11, color: 'var(--text-secondary)', fontWeight: 500 }}>{label}</span>
       </div>
       <div style={{ fontSize: 28, fontWeight: 800, color, lineHeight: 1, letterSpacing: -0.5 }}>{value}</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6 }}>
-        <span style={{ fontSize: 10, color: '#64748b' }}>{sub}</span>
+        <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>{sub}</span>
         {trend && (
           <span style={{
             fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 4,
@@ -126,8 +128,8 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
       gridColumn: span > 1 ? `span ${span}` : undefined,
     }}>
       <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>{title}</div>
-        <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>{subtitle}</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{title}</div>
+        <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>{subtitle}</div>
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>{children}</div>
     </div>
@@ -138,10 +140,10 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
       {/* Period Selector */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#f1f5f9', margin: 0 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
             CEO Dashboard — {periodLabel}
           </h2>
-          <p style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
+          <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
             Statewide maternal health governance overview for leadership review
           </p>
         </div>
@@ -155,7 +157,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
               padding: '6px 16px', borderRadius: 6, border: 'none', cursor: 'pointer',
               fontSize: 12, fontWeight: 600,
               background: period === p.key ? '#3b82f6' : 'transparent',
-              color: period === p.key ? 'white' : '#94a3b8',
+              color: period === p.key ? 'white' : 'var(--text-secondary)',
               transition: 'all 0.2s',
             }}>
               {p.label}
@@ -179,13 +181,18 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
         <KPI icon={Bot} label="AI Automation Rate" value="94%" sub="Actions handled without human intervention" trend="+7%" trendUp={true} color="#8b5cf6" />
       </div>
 
+      {/* UP District Map */}
+      <div style={{ marginBottom: 16 }}>
+        <UPDistrictMap selectedDistrict={selectedMapDistrict} onSelectDistrict={setSelectedMapDistrict} />
+      </div>
+
       {/* Charts Row 1 */}
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 12, marginBottom: 16 }}>
         <ChartCard title="Registration & HRP Detection Trend" subtitle={`New pregnancies and high-risk cases identified — ${periodLabel}`} span={1}>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={historical}>
-              <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} width={30} />
+              <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 9, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} width={30} />
               <Tooltip {...tooltipStyle} />
               <Area type="monotone" dataKey="registrations" stroke="#3b82f6" fill="rgba(59,130,246,0.1)" strokeWidth={2} isAnimationActive={false} name="Registrations" />
               <Area type="monotone" dataKey="hrpDetected" stroke="#ef4444" fill="rgba(239,68,68,0.1)" strokeWidth={2} isAnimationActive={false} name="HRP Detected" />
@@ -204,7 +211,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
           </ResponsiveContainer>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
             {deathCauses.map(d => (
-              <span key={d.name} style={{ fontSize: 9, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 3 }}>
+              <span key={d.name} style={{ fontSize: 9, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 3 }}>
                 <span style={{ width: 7, height: 7, borderRadius: 2, background: d.color, display: 'inline-block' }} />
                 {d.name} {d.value}%
               </span>
@@ -215,8 +222,8 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
         <ChartCard title="ANC Compliance" subtitle="Completed vs missed antenatal checkups">
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={historical}>
-              <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} width={25} />
+              <XAxis dataKey="name" tick={{ fontSize: 9, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 9, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} width={25} />
               <Tooltip {...tooltipStyle} />
               <Bar dataKey="ancCompleted" stackId="a" fill="#10b981" isAnimationActive={false} name="Completed" />
               <Bar dataKey="ancMissed" stackId="a" fill="#ef4444" radius={[3, 3, 0, 0]} isAnimationActive={false} name="Missed" />
@@ -230,8 +237,8 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
         <ChartCard title="District Performance Comparison" subtitle="Key indicators across districts — identify hotspots">
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={districts} layout="vertical" barGap={2}>
-              <XAxis type="number" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} domain={[0, 100]} />
-              <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={70} />
+              <XAxis type="number" tick={{ fontSize: 9, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} domain={[0, 100]} />
+              <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} width={70} />
               <Tooltip {...tooltipStyle} />
               <Bar dataKey="ancCoverage" fill="#10b981" isAnimationActive={false} name="ANC Coverage %" barSize={6} radius={[0, 3, 3, 0]} />
               <Bar dataKey="hrpMonitored" fill="#f97316" isAnimationActive={false} name="HRP Monitored %" barSize={6} radius={[0, 3, 3, 0]} />
@@ -254,8 +261,8 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
         <ChartCard title="AI Orchestration & Escalation Trend" subtitle="AI calls, escalations, and deliveries over time">
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={historical}>
-              <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} width={30} />
+              <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 9, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} width={30} />
               <Tooltip {...tooltipStyle} />
               <Area type="monotone" dataKey="aiCalls" stroke="#06b6d4" fill="rgba(6,182,212,0.08)" strokeWidth={2} isAnimationActive={false} name="AI Calls" />
               <Area type="monotone" dataKey="deliveries" stroke="#ec4899" fill="rgba(236,72,153,0.08)" strokeWidth={2} isAnimationActive={false} name="Deliveries" />
@@ -282,8 +289,8 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
         padding: '16px 18px', marginBottom: 16,
       }}>
         <div style={{ marginBottom: 12 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>District-wise MMR & Key Metrics</div>
-          <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>District-wise MMR & Key Metrics</div>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>
             Maternal Mortality Ratio per 100,000 live births · UP state average: 167 · India: 97 · Tamil Nadu: 35 (target benchmark)
           </div>
         </div>
@@ -292,7 +299,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 {['District', 'MMR', 'ANC Coverage', 'HRP Monitored', 'Institutional Del.', 'AI Call Reach'].map(h => (
-                  <th key={h} style={{ padding: '8px 12px', textAlign: 'left', color: '#94a3b8', fontWeight: 600, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  <th key={h} style={{ padding: '8px 12px', textAlign: 'left', color: 'var(--text-secondary)', fontWeight: 600, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                     {h}
                   </th>
                 ))}
@@ -301,7 +308,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
             <tbody>
               {districts.map(d => (
                 <tr key={d.name} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                  <td style={{ padding: '10px 12px', fontWeight: 600, color: '#e2e8f0' }}>{d.name}</td>
+                  <td style={{ padding: '10px 12px', fontWeight: 600, color: 'var(--text-primary)' }}>{d.name}</td>
                   <td style={{ padding: '10px 12px' }}>
                     <span style={{
                       fontWeight: 700,
@@ -309,7 +316,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
                     }}>
                       {d.mmr}
                     </span>
-                    <span style={{ fontSize: 9, color: '#64748b', marginLeft: 4 }}>per 100k</span>
+                    <span style={{ fontSize: 9, color: 'var(--text-muted)', marginLeft: 4 }}>per 100k</span>
                   </td>
                   {[d.ancCoverage, d.hrpMonitored, d.institutionalDel, d.aiCallReach].map((val, i) => {
                     const color = val >= 80 ? '#10b981' : val >= 60 ? '#f59e0b' : '#ef4444';

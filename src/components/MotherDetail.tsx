@@ -21,7 +21,7 @@ export const MotherDetail: React.FC<MotherDetailProps> = ({ mother, tasks, event
       <div style={{
         background: 'var(--bg-card)', borderRadius: 12, border: '1px solid var(--border)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%',
-        color: '#64748b', fontSize: 12,
+        color: 'var(--text-muted)', fontSize: 12,
       }}>
         Select a beneficiary to view details
       </div>
@@ -35,8 +35,8 @@ export const MotherDetail: React.FC<MotherDetailProps> = ({ mother, tasks, event
   const InfoRow = ({ icon: Icon, label, value, color }: { icon: React.ElementType; label: string; value: string; color?: string }) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0' }}>
       <Icon size={12} color={color || '#64748b'} />
-      <span style={{ fontSize: 10, color: '#64748b', width: 80 }}>{label}</span>
-      <span style={{ fontSize: 11, color: color || '#e2e8f0', fontWeight: 500 }}>{value}</span>
+      <span style={{ fontSize: 10, color: 'var(--text-muted)', width: 80 }}>{label}</span>
+      <span style={{ fontSize: 11, color: color || 'var(--text-primary)', fontWeight: 500 }}>{value}</span>
     </div>
   );
 
@@ -60,9 +60,9 @@ export const MotherDetail: React.FC<MotherDetailProps> = ({ mother, tasks, event
             {mother.name.charAt(0)}
           </div>
           <div>
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9' }}>{mother.name}</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{mother.name}</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
-              <span style={{ fontSize: 10, color: '#94a3b8' }}>{mother.id}</span>
+              <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{mother.id}</span>
               <span style={{
                 fontSize: 9, fontWeight: 700, padding: '1px 8px', borderRadius: 10,
                 background: `${riskColor}20`, color: riskColor, textTransform: 'uppercase',
@@ -77,7 +77,7 @@ export const MotherDetail: React.FC<MotherDetailProps> = ({ mother, tasks, event
       <div style={{ padding: '12px 16px', flex: 1 }}>
         {/* Vitals */}
         <div style={{ marginBottom: 12 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
             Patient Information
           </div>
           <InfoRow icon={User} label="Age" value={`${mother.age} years`} />
@@ -97,7 +97,7 @@ export const MotherDetail: React.FC<MotherDetailProps> = ({ mother, tasks, event
         {/* Risk Factors */}
         {mother.riskFactors.length > 0 && (
           <div style={{ marginBottom: 12 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
               Risk Factors
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
@@ -118,7 +118,7 @@ export const MotherDetail: React.FC<MotherDetailProps> = ({ mother, tasks, event
         {/* Recent Tasks */}
         {motherTasks.length > 0 && (
           <div style={{ marginBottom: 12 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
               Recent Tasks
             </div>
             {motherTasks.map(t => (
@@ -126,8 +126,8 @@ export const MotherDetail: React.FC<MotherDetailProps> = ({ mother, tasks, event
                 padding: '6px 8px', marginBottom: 4, borderRadius: 6,
                 background: 'rgba(255,255,255,0.02)', fontSize: 10,
               }}>
-                <div style={{ color: '#e2e8f0', fontWeight: 500 }}>{t.type}</div>
-                <div style={{ color: '#64748b', marginTop: 2 }}>{t.assignedTo} • {t.status}</div>
+                <div style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{t.type}</div>
+                <div style={{ color: 'var(--text-muted)', marginTop: 2 }}>{t.assignedTo} • {t.status}</div>
               </div>
             ))}
           </div>
@@ -136,7 +136,7 @@ export const MotherDetail: React.FC<MotherDetailProps> = ({ mother, tasks, event
         {/* Recent Events */}
         {motherEvents.length > 0 && (
           <div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
               AI Activity Log
             </div>
             {motherEvents.map(e => (
@@ -145,7 +145,7 @@ export const MotherDetail: React.FC<MotherDetailProps> = ({ mother, tasks, event
                 background: 'rgba(6,182,212,0.04)', fontSize: 10,
                 borderLeft: '2px solid rgba(6,182,212,0.3)',
               }}>
-                <div style={{ color: '#e2e8f0' }}>{e.description.slice(0, 80)}...</div>
+                <div style={{ color: 'var(--text-primary)' }}>{e.description.slice(0, 80)}...</div>
                 <div style={{ color: '#06b6d4', marginTop: 2 }}>🤖 {e.aiAction.slice(0, 80)}...</div>
               </div>
             ))}

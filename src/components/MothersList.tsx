@@ -33,8 +33,8 @@ export const MothersList: React.FC<MothersListProps> = ({ mothers, selectedMothe
       <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
           <Users size={16} color="#ec4899" />
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#f1f5f9' }}>Beneficiaries</span>
-          <span style={{ fontSize: 11, color: '#64748b', marginLeft: 'auto' }}>{filtered.length}/{mothers.length}</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Beneficiaries</span>
+          <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 'auto' }}>{filtered.length}/{mothers.length}</span>
         </div>
         <div style={{ position: 'relative', marginBottom: 8 }}>
           <Search size={14} color="#64748b" style={{ position: 'absolute', left: 8, top: 7 }} />
@@ -43,7 +43,7 @@ export const MothersList: React.FC<MothersListProps> = ({ mothers, selectedMothe
             value={search} onChange={e => setSearch(e.target.value)}
             style={{
               width: '100%', padding: '6px 8px 6px 28px', borderRadius: 6,
-              border: '1px solid #334155', background: '#0f172a', color: '#f1f5f9',
+              border: '1px solid var(--border)', background: 'var(--bg-input)', color: 'var(--text-primary)',
               fontSize: 11, outline: 'none',
             }}
           />
@@ -52,8 +52,8 @@ export const MothersList: React.FC<MothersListProps> = ({ mothers, selectedMothe
           {['all', 'critical', 'high', 'medium', 'low'].map(r => (
             <button key={r} onClick={() => setRiskFilter(r)} style={{
               padding: '2px 8px', borderRadius: 4, border: 'none', cursor: 'pointer', fontSize: 10, fontWeight: 600,
-              background: riskFilter === r ? (r === 'all' ? '#3b82f6' : RISK_COLORS[r]) : 'rgba(255,255,255,0.05)',
-              color: riskFilter === r ? 'white' : '#94a3b8',
+              background: riskFilter === r ? (r === 'all' ? '#3b82f6' : RISK_COLORS[r]) : 'var(--tab-bg)',
+              color: riskFilter === r ? 'white' : 'var(--text-secondary)',
             }}>
               {r === 'all' ? 'All' : r.charAt(0).toUpperCase() + r.slice(1)}
             </button>
@@ -80,10 +80,10 @@ export const MothersList: React.FC<MothersListProps> = ({ mothers, selectedMothe
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: '#e2e8f0' }}>{m.name}</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-primary)' }}>{m.name}</span>
                   {m.hasSmartphone ? <Smartphone size={10} color="#64748b" /> : <PhoneOff size={10} color="#f59e0b" />}
                 </div>
-                <div style={{ fontSize: 9, color: '#64748b' }}>
+                <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>
                   {m.village} • {m.gestationWeeks}w • {m.age}y
                 </div>
               </div>

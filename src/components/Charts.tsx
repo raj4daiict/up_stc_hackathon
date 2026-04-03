@@ -74,9 +74,9 @@ export const Charts: React.FC<ChartsProps> = ({ mothers, tasks, events }) => {
   }, [events]);
 
   const tooltipStyle = {
-    contentStyle: { background: '#1e293b', border: '1px solid #334155', borderRadius: 8, fontSize: 11, boxShadow: '0 8px 24px rgba(0,0,0,0.4)' },
-    labelStyle: { color: '#94a3b8', fontWeight: 600 },
-    cursor: { fill: 'rgba(255,255,255,0.03)' },
+    contentStyle: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 11, boxShadow: 'var(--shadow-lg)', color: 'var(--text-primary)' },
+    labelStyle: { color: 'var(--text-secondary)', fontWeight: 600 },
+    cursor: { fill: 'var(--subtle-bg)' },
   };
 
   const ChartCard = ({ title, insight, children }: { title: string; insight: string; children: React.ReactNode }) => (
@@ -85,8 +85,8 @@ export const Charts: React.FC<ChartsProps> = ({ mothers, tasks, events }) => {
       padding: '16px 18px', display: 'flex', flexDirection: 'column',
     }}>
       <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0', lineHeight: 1.3 }}>{title}</div>
-        <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>{insight}</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.3 }}>{title}</div>
+        <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>{insight}</div>
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>{children}</div>
     </div>
@@ -116,7 +116,7 @@ export const Charts: React.FC<ChartsProps> = ({ mothers, tasks, events }) => {
                   <div style={{ width: 10, height: 10, borderRadius: 3, background: d.color, flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                      <span style={{ fontSize: 11, color: '#e2e8f0', fontWeight: 500 }}>{d.name}</span>
+                      <span style={{ fontSize: 11, color: 'var(--text-primary)', fontWeight: 500 }}>{d.name}</span>
                       <span style={{ fontSize: 13, color: d.color, fontWeight: 700 }}>{d.value}</span>
                     </div>
                     <div style={{ height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.06)', marginTop: 3 }}>
@@ -134,8 +134,8 @@ export const Charts: React.FC<ChartsProps> = ({ mothers, tasks, events }) => {
       <ChartCard title="Task Accountability by Role" insight="Who's completing vs pending — SLA compliance">
         <ResponsiveContainer width="100%" height={150}>
           <BarChart data={roleData} barGap={2}>
-            <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} width={25} />
+            <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 9, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} width={25} />
             <Tooltip {...tooltipStyle} />
             <Bar dataKey="done" stackId="a" fill="#10b981" radius={[0, 0, 0, 0]} isAnimationActive={false} name="Completed" />
             <Bar dataKey="pending" stackId="a" fill="#f59e0b" radius={[3, 3, 0, 0]} isAnimationActive={false} name="Pending" />
@@ -155,8 +155,8 @@ export const Charts: React.FC<ChartsProps> = ({ mothers, tasks, events }) => {
       <ChartCard title="Pregnancy Journey & HRP Load" insight="HRP concentration by trimester — T3 needs delivery prep">
         <ResponsiveContainer width="100%" height={150}>
           <BarChart data={journeyData} barGap={4}>
-            <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} width={25} />
+            <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 9, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} width={25} />
             <Tooltip {...tooltipStyle} />
             <Bar dataKey="total" fill="rgba(59,130,246,0.3)" radius={[3, 3, 0, 0]} isAnimationActive={false} name="Total" />
             <Bar dataKey="hrp" fill="#ef4444" radius={[3, 3, 0, 0]} isAnimationActive={false} name="High Risk" />
@@ -176,8 +176,8 @@ export const Charts: React.FC<ChartsProps> = ({ mothers, tasks, events }) => {
       <ChartCard title="AI Orchestration Pulse" insight="Events, alerts & calls over simulation time">
         <ResponsiveContainer width="100%" height={150}>
           <AreaChart data={activityPulse}>
-            <XAxis dataKey="time" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} width={25} />
+            <XAxis dataKey="time" tick={{ fontSize: 9, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 9, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} width={25} />
             <Tooltip {...tooltipStyle} />
             <Area type="monotone" dataKey="events" stroke="#3b82f6" fill="rgba(59,130,246,0.08)" strokeWidth={2} isAnimationActive={false} name="Events" />
             <Area type="monotone" dataKey="alerts" stroke="#ef4444" fill="rgba(239,68,68,0.08)" strokeWidth={2} isAnimationActive={false} name="Alerts" />

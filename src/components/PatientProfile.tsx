@@ -56,7 +56,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
       <div style={{
         background: 'var(--bg-card)', borderRadius: 12, border: '1px solid var(--border)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%',
-        color: '#64748b', fontSize: 13,
+        color: 'var(--text-muted)', fontSize: 13,
       }}>
         Select a beneficiary from the list, then open Patient Profile tab to view full history
       </div>
@@ -71,8 +71,8 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
   const InfoRow = ({ icon: Icon, label, value, color }: { icon: React.ElementType; label: string; value: string; color?: string }) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
       <Icon size={14} color={color || '#64748b'} />
-      <span style={{ fontSize: 12, color: '#94a3b8', width: 120 }}>{label}</span>
-      <span style={{ fontSize: 12, color: color || '#e2e8f0', fontWeight: 500 }}>{value}</span>
+      <span style={{ fontSize: 12, color: 'var(--text-secondary)', width: 120 }}>{label}</span>
+      <span style={{ fontSize: 12, color: color || 'var(--text-primary)', fontWeight: 500 }}>{value}</span>
     </div>
   );
 
@@ -81,14 +81,14 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
       padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer',
       fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6,
       background: section === id ? '#3b82f6' : 'rgba(255,255,255,0.05)',
-      color: section === id ? 'white' : '#94a3b8',
+      color: section === id ? 'white' : 'var(--text-secondary)',
       transition: 'all 0.2s',
     }}>
       {label}
       <span style={{
         fontSize: 10, padding: '1px 6px', borderRadius: 8,
         background: section === id ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.08)',
-        color: section === id ? 'white' : '#64748b',
+        color: section === id ? 'white' : 'var(--text-muted)',
       }}>
         {count}
       </span>
@@ -108,7 +108,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
           background: `linear-gradient(135deg, ${riskColor}10, transparent)`,
         }}>
           <button onClick={onBack} style={{
-            background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8',
+            background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)',
             display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, marginBottom: 12, padding: 0,
           }}>
             <ChevronLeft size={14} /> Back to Dashboard
@@ -123,8 +123,8 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
               {mother.name.charAt(0)}
             </div>
             <div>
-              <h2 style={{ fontSize: 17, fontWeight: 700, color: '#f1f5f9', margin: 0 }}>{mother.name}</h2>
-              <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>{mother.id}</div>
+              <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{mother.name}</h2>
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 2 }}>{mother.id}</div>
               <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
                 <span style={{
                   fontSize: 10, fontWeight: 700, padding: '2px 10px', borderRadius: 10,
@@ -145,7 +145,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
 
         {/* Patient Details */}
         <div style={{ padding: 16, flex: 1 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
             Demographics
           </div>
           <InfoRow icon={User} label="Age" value={`${mother.age} years`} />
@@ -154,7 +154,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
           <InfoRow icon={Phone} label="Phone" value={mother.phone || 'Not available'} />
           <InfoRow icon={mother.hasSmartphone ? Smartphone : PhoneOff} label="Device Type" value={mother.hasSmartphone ? 'Smartphone' : 'Basic / No phone'} color={mother.hasSmartphone ? '#10b981' : '#f59e0b'} />
 
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', marginTop: 16, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', marginTop: 16, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
             Clinical Information
           </div>
           <InfoRow icon={Baby} label="Gestation" value={`${mother.gestationWeeks} weeks (Trimester ${mother.trimester})`} />
@@ -166,7 +166,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
           <InfoRow icon={Droplets} label="Blood Group" value={mother.bloodGroup} />
           <InfoRow icon={Baby} label="Previous Deliveries" value={String(mother.previousDeliveries)} />
 
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', marginTop: 16, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', marginTop: 16, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
             Assigned Care Team
           </div>
           <InfoRow icon={Shield} label="ASHA Worker" value={mother.assignedAsha} color="#10b981" />
@@ -174,7 +174,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
 
           {mother.riskFactors.length > 0 && (
             <>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', marginTop: 16, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', marginTop: 16, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
                 Risk Factors ({mother.riskFactors.length})
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
@@ -193,7 +193,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
           )}
 
           {/* Summary Stats */}
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', marginTop: 16, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', marginTop: 16, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
             AI Engagement Summary
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
@@ -207,7 +207,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
                 border: `1px solid ${s.color}20`, textAlign: 'center',
               }}>
                 <div style={{ fontSize: 18, fontWeight: 800, color: s.color }}>{s.value}</div>
-                <div style={{ fontSize: 9, color: '#94a3b8' }}>{s.label}</div>
+                <div style={{ fontSize: 9, color: 'var(--text-secondary)' }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -235,7 +235,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
           {/* FULL TIMELINE */}
           {section === 'overview' && (
             motherEvents.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40, color: '#64748b', fontSize: 12 }}>
+              <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)', fontSize: 12 }}>
                 <Bot size={28} style={{ marginBottom: 8, opacity: 0.3 }} />
                 <p>No AI activity recorded yet for this patient.</p>
                 <p style={{ fontSize: 11, marginTop: 4 }}>Start the simulation to see events appear here.</p>
@@ -248,7 +248,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
                   background: 'linear-gradient(to bottom, #334155, transparent)',
                 }} />
                 {[...motherEvents].reverse().map((event, idx) => {
-                  const cfg = EVENT_ICON_MAP[event.type] || { icon: Bot, color: '#94a3b8' };
+                  const cfg = EVENT_ICON_MAP[event.type] || { icon: Bot, color: 'var(--text-secondary)' };
                   const Icon = cfg.icon;
                   return (
                     <div key={event.id} className={idx === 0 ? 'animate-slide-in' : ''} style={{
@@ -284,11 +284,11 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
                               {event.riskLevel.toUpperCase()}
                             </span>
                           )}
-                          <span style={{ fontSize: 10, color: '#64748b', marginLeft: 'auto' }}>
+                          <span style={{ fontSize: 10, color: 'var(--text-muted)', marginLeft: 'auto' }}>
                             {new Date(event.timestamp).toLocaleString()}
                           </span>
                         </div>
-                        <p style={{ fontSize: 12, color: '#e2e8f0', lineHeight: 1.5, marginBottom: 6 }}>
+                        <p style={{ fontSize: 12, color: 'var(--text-primary)', lineHeight: 1.5, marginBottom: 6 }}>
                           {event.description}
                         </p>
                         <div style={{
@@ -300,8 +300,8 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
                           </span>
                         </div>
                         {event.agentName && (
-                          <div style={{ marginTop: 6, fontSize: 10, color: '#94a3b8' }}>
-                            Assigned to: <span style={{ color: '#e2e8f0', fontWeight: 500 }}>{event.agentName}</span>
+                          <div style={{ marginTop: 6, fontSize: 10, color: 'var(--text-secondary)' }}>
+                            Assigned to: <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{event.agentName}</span>
                           </div>
                         )}
                       </div>
@@ -315,7 +315,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
           {/* ALL TASKS */}
           {section === 'tasks' && (
             motherTasks.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40, color: '#64748b', fontSize: 12 }}>
+              <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)', fontSize: 12 }}>
                 <ClipboardList size={28} style={{ marginBottom: 8, opacity: 0.3 }} />
                 <p>No tasks assigned yet for this patient.</p>
               </div>
@@ -329,7 +329,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
                     border: `1px solid ${task.priority === 'critical' ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.05)'}`,
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0', flex: 1 }}>{task.type}</span>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', flex: 1 }}>{task.type}</span>
                       <span style={{
                         fontSize: 10, fontWeight: 700, padding: '2px 10px', borderRadius: 6,
                         background: `${statusColor}15`, color: statusColor, textTransform: 'uppercase',
@@ -343,15 +343,15 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
                         {task.priority}
                       </span>
                     </div>
-                    <p style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.5, marginBottom: 8 }}>
+                    <p style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 8 }}>
                       {task.description}
                     </p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 11 }}>
-                      <span style={{ color: '#64748b' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>
                         <Shield size={10} style={{ marginRight: 4, verticalAlign: 'middle' }} />
-                        {ROLE_LABELS[task.assignedRole] || task.assignedRole}: <span style={{ color: '#e2e8f0' }}>{task.assignedTo}</span>
+                        {ROLE_LABELS[task.assignedRole] || task.assignedRole}: <span style={{ color: 'var(--text-primary)' }}>{task.assignedTo}</span>
                       </span>
-                      <span style={{ color: '#64748b' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>
                         <Clock size={10} style={{ marginRight: 4, verticalAlign: 'middle' }} />
                         Due: {new Date(task.dueDate).toLocaleDateString()}
                       </span>
@@ -377,7 +377,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
           {/* AI CALLS */}
           {section === 'calls' && (
             motherCalls.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40, color: '#64748b', fontSize: 12 }}>
+              <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)', fontSize: 12 }}>
                 <PhoneCall size={28} style={{ marginBottom: 8, opacity: 0.3 }} />
                 <p>No AI calls recorded yet for this patient.</p>
                 {!mother.hasSmartphone && (
@@ -390,7 +390,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
               [...motherCalls].reverse().map((call, idx) => {
                 const sentimentColors: Record<string, { color: string; emoji: string }> = {
                   positive: { color: '#10b981', emoji: '😊' },
-                  neutral: { color: '#94a3b8', emoji: '😐' },
+                  neutral: { color: 'var(--text-secondary)', emoji: '😐' },
                   concerned: { color: '#f59e0b', emoji: '😟' },
                   distressed: { color: '#ef4444', emoji: '😰' },
                 };
@@ -409,7 +409,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                       <PhoneCall size={16} color={sColor} />
-                      <span style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', flex: 1 }}>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', flex: 1 }}>
                         {call.callType.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                       </span>
                       <span style={{
@@ -419,7 +419,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
                         {call.status.replace('_', ' ')}
                       </span>
                     </div>
-                    <div style={{ display: 'flex', gap: 12, fontSize: 11, color: '#94a3b8', marginBottom: 6 }}>
+                    <div style={{ display: 'flex', gap: 12, fontSize: 11, color: 'var(--text-secondary)', marginBottom: 6 }}>
                       <span>🗣️ {call.language}</span>
                       {call.duration && <span>⏱️ {Math.floor(call.duration / 60)}m {call.duration % 60}s</span>}
                       <span>📅 {new Date(call.timestamp).toLocaleString()}</span>
@@ -433,7 +433,7 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ mother, tasks, e
                       <div style={{
                         padding: '8px 12px', borderRadius: 6,
                         background: 'rgba(6,182,212,0.06)', borderLeft: '3px solid rgba(6,182,212,0.3)',
-                        fontSize: 12, color: '#e2e8f0', lineHeight: 1.5,
+                        fontSize: 12, color: 'var(--text-primary)', lineHeight: 1.5,
                       }}>
                         {call.summary}
                       </div>

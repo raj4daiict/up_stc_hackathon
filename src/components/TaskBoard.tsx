@@ -47,7 +47,7 @@ export const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onOpenProfile }) =>
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <ClipboardList size={16} color="#8b5cf6" />
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#f1f5f9' }}>AI Task Assignments</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>AI Task Assignments</span>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           {['pending', 'completed', 'escalated'].map(status => {
@@ -77,7 +77,7 @@ export const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onOpenProfile }) =>
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                 <StatusIcon size={14} color={statusCfg.color} />
-                <span style={{ fontSize: 12, fontWeight: 600, color: '#e2e8f0', flex: 1 }}>{task.type}</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', flex: 1 }}>{task.type}</span>
                 {task.motherName && onOpenProfile && (
                   <span
                     onClick={() => onOpenProfile(task.motherId)}
@@ -94,7 +94,7 @@ export const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onOpenProfile }) =>
                   {task.priority.toUpperCase()}
                 </span>
               </div>
-              <p style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1.4, marginBottom: 6 }}>
+              <p style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: 6 }}>
                 {task.description.length > 120 ? task.description.slice(0, 120) + '...' : task.description}
               </p>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -105,7 +105,7 @@ export const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onOpenProfile }) =>
                   }}>
                     {ROLE_LABELS[task.assignedRole] || task.assignedRole}
                   </span>
-                  <span style={{ fontSize: 10, color: '#64748b' }}>{task.assignedTo}</span>
+                  <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>{task.assignedTo}</span>
                 </div>
                 {task.aiGenerated && (
                   <span style={{ fontSize: 9, color: '#06b6d4', fontWeight: 500 }}>🤖 AI Generated</span>
