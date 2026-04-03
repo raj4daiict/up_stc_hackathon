@@ -38,7 +38,7 @@ export const AICallCenter: React.FC<AICallCenterProps> = ({ calls, onOpenProfile
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
           <Phone size={16} color="#06b6d4" />
-          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>AI Call Center</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Patient Contact Centre</span>
           <span style={{ fontSize: 9, color: '#06b6d4', marginLeft: 4, fontWeight: 500 }}>Amazon Connect</span>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>

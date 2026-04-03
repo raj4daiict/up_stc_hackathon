@@ -8,7 +8,6 @@ import {
   Heart, Users, ClipboardList, Building2, ArrowUpCircle, Bot
 } from 'lucide-react';
 import type { Mother, Task, TimelineEvent, AICallRecord, Hospital } from '../types';
-import { UPDistrictMap } from './UPDistrictMap';
 
 type Period = 'week' | 'month' | 'year';
 
@@ -44,18 +43,17 @@ function generateHistorical(period: Period) {
 
 function generateDistrictComparison() {
   return [
-    { name: 'Lucknow', mmr: 145, ancCoverage: 78, hrpMonitored: 92, institutionalDel: 85, aiCallReach: 76 },
-    { name: 'Varanasi', mmr: 168, ancCoverage: 65, hrpMonitored: 84, institutionalDel: 72, aiCallReach: 68 },
-    { name: 'Agra', mmr: 172, ancCoverage: 61, hrpMonitored: 79, institutionalDel: 68, aiCallReach: 62 },
-    { name: 'Kanpur', mmr: 155, ancCoverage: 70, hrpMonitored: 87, institutionalDel: 78, aiCallReach: 71 },
-    { name: 'Prayagraj', mmr: 162, ancCoverage: 67, hrpMonitored: 82, institutionalDel: 74, aiCallReach: 65 },
-    { name: 'Gorakhpur', mmr: 185, ancCoverage: 55, hrpMonitored: 72, institutionalDel: 62, aiCallReach: 55 },
+    { name: 'Lucknow', mmr: 145, ancCoverage: 78, hrpMonitored: 92, institutionalDel: 85, patientReach: 76 },
+    { name: 'Varanasi', mmr: 168, ancCoverage: 65, hrpMonitored: 84, institutionalDel: 72, patientReach: 68 },
+    { name: 'Agra', mmr: 172, ancCoverage: 61, hrpMonitored: 79, institutionalDel: 68, patientReach: 62 },
+    { name: 'Kanpur', mmr: 155, ancCoverage: 70, hrpMonitored: 87, institutionalDel: 78, patientReach: 71 },
+    { name: 'Prayagraj', mmr: 162, ancCoverage: 67, hrpMonitored: 82, institutionalDel: 74, patientReach: 65 },
+    { name: 'Gorakhpur', mmr: 185, ancCoverage: 55, hrpMonitored: 72, institutionalDel: 62, patientReach: 55 },
   ];
 }
 
 export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
   const [period, setPeriod] = useState<Period>('month');
-  const [selectedMapDistrict, setSelectedMapDistrict] = useState<string | null>(null);
 
   const historical = useMemo(() => generateHistorical(period), [period]);
   const districts = useMemo(() => generateDistrictComparison(), []);
@@ -141,7 +139,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div>
           <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-            CEO Dashboard — {periodLabel}
+            Monitoring Dashboard — {periodLabel}
           </h2>
           <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
             Statewide maternal health governance overview for leadership review
@@ -171,7 +169,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
         <KPI icon={Users} label="Pregnancies Registered" value={totalReg.toLocaleString()} sub={periodLabel} trend="+12%" trendUp={true} color="#3b82f6" />
         <KPI icon={AlertTriangle} label="HRP Cases Detected" value={totalHRP.toLocaleString()} sub={`${totalReg > 0 ? Math.round((totalHRP / totalReg) * 100) : 0}% of registrations`} trend="+8%" trendUp={false} color="#f97316" />
         <KPI icon={Heart} label="Institutional Delivery Rate" value={`${instDelRate}%`} sub={`${totalInstDel} of ${totalDel} deliveries`} trend="+5%" trendUp={true} color="#ec4899" />
-        <KPI icon={Phone} label="AI Calls Completed" value={totalCalls.toLocaleString()} sub="Amazon Connect outbound" trend="+23%" trendUp={true} color="#06b6d4" />
+        <KPI icon={Phone} label="Patients Contacted" value={totalCalls.toLocaleString()} sub="Amazon Connect outbound" trend="+23%" trendUp={true} color="#06b6d4" />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 16 }}>
@@ -179,11 +177,6 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
         <KPI icon={ArrowUpCircle} label="Escalations" value={totalEsc.toLocaleString()} sub="Cases requiring leadership action" trend="-15%" trendUp={true} color="#ef4444" />
         <KPI icon={Building2} label="Facility Readiness" value={`${hospitals.reduce((s, h) => s + h.availableBeds, 0)}`} sub={`beds available across ${hospitals.length} facilities`} color="#f59e0b" />
         <KPI icon={Bot} label="AI Automation Rate" value="94%" sub="Actions handled without human intervention" trend="+7%" trendUp={true} color="#8b5cf6" />
-      </div>
-
-      {/* UP District Map */}
-      <div style={{ marginBottom: 16 }}>
-        <UPDistrictMap selectedDistrict={selectedMapDistrict} onSelectDistrict={setSelectedMapDistrict} />
       </div>
 
       {/* Charts Row 1 */}
@@ -242,14 +235,14 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
               <Tooltip {...tooltipStyle} />
               <Bar dataKey="ancCoverage" fill="#10b981" isAnimationActive={false} name="ANC Coverage %" barSize={6} radius={[0, 3, 3, 0]} />
               <Bar dataKey="hrpMonitored" fill="#f97316" isAnimationActive={false} name="HRP Monitored %" barSize={6} radius={[0, 3, 3, 0]} />
-              <Bar dataKey="aiCallReach" fill="#06b6d4" isAnimationActive={false} name="AI Call Reach %" barSize={6} radius={[0, 3, 3, 0]} />
+              <Bar dataKey="patientReach" fill="#06b6d4" isAnimationActive={false} name="Patient Reach Rate %" barSize={6} radius={[0, 3, 3, 0]} />
             </BarChart>
           </ResponsiveContainer>
           <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 4 }}>
             {[
               { label: 'ANC Coverage', color: '#10b981' },
               { label: 'HRP Monitored', color: '#f97316' },
-              { label: 'AI Call Reach', color: '#06b6d4' },
+              { label: 'Patient Reach Rate', color: '#06b6d4' },
             ].map(l => (
               <span key={l.label} style={{ fontSize: 9, color: l.color, display: 'flex', alignItems: 'center', gap: 4 }}>
                 <span style={{ width: 8, height: 6, borderRadius: 2, background: l.color, display: 'inline-block' }} /> {l.label}
@@ -264,14 +257,14 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
               <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 9, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} width={30} />
               <Tooltip {...tooltipStyle} />
-              <Area type="monotone" dataKey="aiCalls" stroke="#06b6d4" fill="rgba(6,182,212,0.08)" strokeWidth={2} isAnimationActive={false} name="AI Calls" />
+              <Area type="monotone" dataKey="aiCalls" stroke="#06b6d4" fill="rgba(6,182,212,0.08)" strokeWidth={2} isAnimationActive={false} name="Patients Contacted" />
               <Area type="monotone" dataKey="deliveries" stroke="#ec4899" fill="rgba(236,72,153,0.08)" strokeWidth={2} isAnimationActive={false} name="Deliveries" />
               <Area type="monotone" dataKey="escalations" stroke="#ef4444" fill="rgba(239,68,68,0.08)" strokeWidth={2} isAnimationActive={false} name="Escalations" />
             </AreaChart>
           </ResponsiveContainer>
           <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 4 }}>
             {[
-              { label: 'AI Calls', color: '#06b6d4' },
+              { label: 'Patients Contacted', color: '#06b6d4' },
               { label: 'Deliveries', color: '#ec4899' },
               { label: 'Escalations', color: '#ef4444' },
             ].map(l => (
@@ -298,7 +291,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['District', 'MMR', 'ANC Coverage', 'HRP Monitored', 'Institutional Del.', 'AI Call Reach'].map(h => (
+                {['District', 'MMR', 'ANC Coverage', 'HRP Monitored', 'Institutional Del.', 'Patient Reach Rate'].map(h => (
                   <th key={h} style={{ padding: '8px 12px', textAlign: 'left', color: 'var(--text-secondary)', fontWeight: 600, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                     {h}
                   </th>
@@ -318,7 +311,7 @@ export const CEOAnalytics: React.FC<CEOAnalyticsProps> = ({ hospitals }) => {
                     </span>
                     <span style={{ fontSize: 9, color: 'var(--text-muted)', marginLeft: 4 }}>per 100k</span>
                   </td>
-                  {[d.ancCoverage, d.hrpMonitored, d.institutionalDel, d.aiCallReach].map((val, i) => {
+                  {[d.ancCoverage, d.hrpMonitored, d.institutionalDel, d.patientReach].map((val, i) => {
                     const color = val >= 80 ? '#10b981' : val >= 60 ? '#f59e0b' : '#ef4444';
                     return (
                       <td key={i} style={{ padding: '10px 12px' }}>

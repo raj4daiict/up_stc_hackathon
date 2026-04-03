@@ -93,8 +93,8 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ mothers, tasks, calls, h
             <div style={{ fontSize: 36, fontWeight: 800, color: '#06b6d4', lineHeight: 1, letterSpacing: -1 }}>{stats.callsCompleted}</div>
             <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>/{calls.length}</div>
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500, marginTop: 4 }}>AI Calls Completed</div>
-          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 6 }}>{stats.callsNoAnswer} unreachable · Auto-retry scheduled</div>
+          <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500, marginTop: 4 }}>Patients Contacted</div>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 6 }}>{stats.callsNoAnswer} unreachable · ASHA notified for home visit</div>
         </HeroCard>
 
         <HeroCard color={stats.escalations > 0 ? '#ef4444' : '#10b981'}>
@@ -108,7 +108,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ mothers, tasks, calls, h
         {[
           { label: 'ANC Coverage', pct: stats.ancRate, color: stats.ancRate >= 80 ? '#10b981' : stats.ancRate >= 60 ? '#f59e0b' : '#ef4444', sub: 'Checkup within 30 days', target: 'Target: 100%' },
           { label: 'Task Completion', pct: stats.taskCompletionRate, color: stats.taskCompletionRate >= 80 ? '#10b981' : stats.taskCompletionRate >= 50 ? '#f59e0b' : '#ef4444', sub: `${stats.completedTasks} of ${tasks.length} tasks`, target: `${stats.activeTasks} active` },
-          { label: 'Call Reach Rate', pct: stats.callReachRate, color: stats.callReachRate >= 70 ? '#10b981' : stats.callReachRate >= 40 ? '#f59e0b' : '#ef4444', sub: 'Amazon Connect outbound', target: 'TN benchmark: 43%' },
+          { label: 'Patient Reach Rate', pct: stats.callReachRate, color: stats.callReachRate >= 70 ? '#10b981' : stats.callReachRate >= 40 ? '#f59e0b' : '#ef4444', sub: 'Via Amazon Connect & ASHA visits', target: 'TN benchmark: 43%' },
           { label: 'Bed Occupancy', pct: stats.bedOccupancy, color: stats.bedOccupancy <= 60 ? '#10b981' : stats.bedOccupancy <= 80 ? '#f59e0b' : '#ef4444', sub: `${stats.availBeds} of ${stats.totalBeds} available`, target: `${stats.ambReady} ambulances ready` },
         ].map(item => (
           <div key={item.label} style={{
