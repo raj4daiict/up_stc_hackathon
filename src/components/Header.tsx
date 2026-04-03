@@ -18,12 +18,13 @@ interface HeaderProps {
   onTabChange: (tab: MainTab) => void;
   theme: Theme;
   onThemeChange: (t: Theme) => void;
+  onOpenRegistration?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   simulation, onToggle, onStep, onReset, onSpeedChange,
   eventCount, taskCount, callCount,
-  activeTab, onTabChange, theme, onThemeChange,
+  activeTab, onTabChange, theme, onThemeChange, onOpenRegistration,
 }) => {
   const isUPSTC = theme === 'upstc';
   const headerTextColor = isUPSTC ? '#ffffff' : 'var(--text-primary)';
@@ -157,6 +158,12 @@ export const Header: React.FC<HeaderProps> = ({
             }}>{tab.label}</button>
           );
         })}
+        {onOpenRegistration && (
+          <button onClick={onOpenRegistration} style={{
+            marginLeft: 'auto', padding: '6px 16px', borderRadius: 6, border: 'none', cursor: 'pointer',
+            fontSize: 12, fontWeight: 600, background: '#5BBED3', color: 'white',
+          }}>+ New Registration</button>
+        )}
       </div>
     </header>
   );

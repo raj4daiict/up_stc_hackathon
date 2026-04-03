@@ -15,6 +15,7 @@ import { AICallCenter } from './components/AICallCenter';
 import { PatientProfile } from './components/PatientProfile';
 import { CEOAnalytics } from './components/CEOAnalytics';
 import { DeliveryDueCards } from './components/DeliveryDueCards';
+import { RegistrationFlow } from './components/registration/RegistrationFlow';
 
 const INITIAL_MOTHERS = generateMothers(40);
 const INITIAL_HOSPITALS = generateHospitals();
@@ -34,12 +35,23 @@ function App() {
   const [commandSubTab, setCommandSubTab] = useState<CommandSubTab>('live');
   const [theme, setTheme] = useState<Theme>('upstc');
   const [districtFilter, setDistrictFilter] = useState<string>('all');
+  const [route, setRoute] = useState(() => window.location.hash === '#/registration' ? 'registration' : 'app');
   const [simulation, setSimulation] = useState<SimulationState>({
     isRunning: false, speed: 1, currentStep: 0, totalSteps: 0, elapsedTime: 0,
   });
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => { document.documentElement.setAttribute('data-theme', theme); }, [theme]);
+
+  // Hash-based routing
+  useEffect(() => {
+    const onHash = () => setRoute(window.location.hash === '#/registration' ? 'registration' : 'app');
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  const openRegistration = useCallback(() => { window.location.hash = '#/registration'; }, []);
+  const closeRegistration = useCallback(() => { window.location.hash = ''; }, []);
 
   const runStep = useCallback(() => {
     const mother = mothers[Math.floor(Math.random() * mothers.length)];
@@ -88,9 +100,11 @@ function App() {
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      {route === 'registration' && <RegistrationFlow onClose={closeRegistration} />}
       <Header simulation={simulation} onToggle={toggleSimulation} onStep={runStep} onReset={resetSimulation}
         onSpeedChange={changeSpeed} eventCount={events.length} taskCount={tasks.length} callCount={calls.length}
-        activeTab={mainTab} onTabChange={setMainTab} theme={theme} onThemeChange={setTheme} />
+        activeTab={mainTab} onTabChange={setMainTab} theme={theme} onThemeChange={setTheme}
+        onOpenRegistration={openRegistration} />
 
       <div style={{ flex: 1, overflow: 'auto' }}>
 
