@@ -16,6 +16,8 @@ import { PatientProfile } from './components/PatientProfile';
 import { CEOAnalytics } from './components/CEOAnalytics';
 import { DeliveryDueCards } from './components/DeliveryDueCards';
 import { RegistrationFlow } from './components/registration/RegistrationFlow';
+import { DemoTab } from './demo/DemoTab';
+import { PreparednessTab } from './preparedness/PreparednessTab';
 
 const INITIAL_MOTHERS = generateMothers(40);
 const INITIAL_HOSPITALS = generateHospitals();
@@ -107,6 +109,24 @@ function App() {
         onOpenRegistration={openRegistration} />
 
       <div style={{ flex: 1, overflow: 'auto' }}>
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* CARE FLOW DEMO                                             */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {mainTab === 'careflow' && (
+          <div style={{ height: '100%' }}>
+            <DemoTab />
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* PREPAREDNESS TAB                                           */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {mainTab === 'preparedness' && (
+          <div style={{ height: '100%' }}>
+            <PreparednessTab />
+          </div>
+        )}
 
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* MONITORING DASHBOARD                                       */}

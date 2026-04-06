@@ -2,7 +2,7 @@ import React from 'react';
 import { Activity, Play, Pause, SkipForward, RotateCcw, Gauge, Sun, Moon, Palette } from 'lucide-react';
 import type { SimulationState } from '../types';
 
-export type MainTab = 'monitoring' | 'command';
+export type MainTab = 'monitoring' | 'command' | 'careflow' | 'preparedness';
 export type Theme = 'dark' | 'light' | 'upstc';
 
 interface HeaderProps {
@@ -146,6 +146,8 @@ export const Header: React.FC<HeaderProps> = ({
         {([
           { key: 'monitoring' as MainTab, label: '📊 Monitoring Dashboard' },
           { key: 'command' as MainTab, label: '🎯 Active Command Centre' },
+          { key: 'careflow' as MainTab, label: '🤰 Care Flow' },
+          { key: 'preparedness' as MainTab, label: '🏥 Preparedness' },
         ]).map(tab => {
           const isActive = activeTab === tab.key;
           const activeColor = isUPSTC ? '#ea580c' : '#3b82f6';
