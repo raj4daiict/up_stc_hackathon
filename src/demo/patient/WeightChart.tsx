@@ -33,7 +33,7 @@ export function WeightChart({ weights }: Props) {
         <LineChart data={data} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
           <XAxis dataKey="week" tick={{ fontSize: 10 }} />
           <YAxis domain={['auto', 'auto']} tick={{ fontSize: 10 }} />
-          <Tooltip formatter={(v: number) => [`${v} kg`, 'वजन']} />
+          <Tooltip formatter={(v) => [`${v ?? ''} kg`, 'वजन']} />
           <Line
             type="monotone"
             dataKey="weight"

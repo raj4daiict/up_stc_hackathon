@@ -2,16 +2,32 @@ import { useState, useRef } from 'react';
 
 declare global {
   interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
+    SpeechRecognition: new () => SpeechRecognition;
+    webkitSpeechRecognition: new () => SpeechRecognition;
   }
+  interface SpeechRecognition extends EventTarget {
+    lang: string;
+    continuous: boolean;
+    interimResults: boolean;
+    onstart: (() => void) | null;
+    onend: (() => void) | null;
+    onerror: (() => void) | null;
+    onresult: ((e: SpeechRecognitionEvent) => void) | null;
+    start(): void;
+    stop(): void;
+  }
+  interface SpeechRecognitionEvent extends Event {
+    results: SpeechRecognitionResultList;
+  }
+  // eslint-disable-next-line no-var
+  var SpeechRecognition: { new(): SpeechRecognition };
 }
 
 export type VoiceState = 'idle' | 'recording' | 'unsupported';
 
 export function useVoiceRecorder(onTranscript: (text: string) => void) {
   const [voiceState, setVoiceState] = useState<VoiceState>('idle');
-  const recognitionRef = useRef<InstanceType<typeof SpeechRecognition> | null>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const toggle = () => {
     const API = window.SpeechRecognition || window.webkitSpeechRecognition;
