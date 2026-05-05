@@ -16,6 +16,7 @@ import { PatientProfile } from './components/PatientProfile';
 import { CEOAnalytics } from './components/CEOAnalytics';
 import { DeliveryDueCards } from './components/DeliveryDueCards';
 import { RegistrationFlow } from './components/registration/RegistrationFlow';
+import { MonitoringDashboard } from './components/MonitoringDashboard';
 import { DemoTab } from './demo/DemoTab';
 import { PreparednessTab } from './preparedness/PreparednessTab';
 
@@ -132,33 +133,16 @@ function App() {
         {/* MONITORING DASHBOARD                                       */}
         {/* ═══════════════════════════════════════════════════════════ */}
         {mainTab === 'monitoring' && (
-          <>
-            {/* District filter */}
-            <div style={{ padding: '12px 24px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500 }}>District:</span>
-              <select value={districtFilter} onChange={e => setDistrictFilter(e.target.value)} style={{
-                padding: '5px 28px 5px 10px', borderRadius: 6, border: '1px solid var(--border)',
-                background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: 12, fontWeight: 500,
-                cursor: 'pointer', outline: 'none', appearance: 'none',
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
-                backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
-              }}>
-                <option value="all">All Districts</option>
-                {DISTRICTS.slice(0, 3).map(d => <option key={d} value={d}>{d}</option>)}
-              </select>
-              {districtFilter !== 'all' && (
-                <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>Showing {fm.length} of {mothers.length} beneficiaries</span>
-              )}
-            </div>
-
-            <StatsCards mothers={fm} tasks={ft} calls={fc} hospitals={fh} ambulances={ambulances} />
-            <DeliveryDueCards mothers={fm} onOpenProfile={handleOpenProfile} />
-            <Charts mothers={fm} tasks={ft} events={fe} calls={fc} />
-
-            <div style={{ padding: '0 24px 24px' }}>
-              <CEOAnalytics mothers={mothers} tasks={tasks} events={events} calls={calls} hospitals={hospitals} />
-            </div>
-          </>
+          <MonitoringDashboard
+            mothers={mothers}
+            tasks={tasks}
+            events={events}
+            calls={calls}
+            hospitals={hospitals}
+            ambulances={ambulances}
+            districtFilter={districtFilter}
+            onDistrictFilterChange={setDistrictFilter}
+          />
         )}
 
         {/* ═══════════════════════════════════════════════════════════ */}
