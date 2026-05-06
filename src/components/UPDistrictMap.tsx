@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import * as topojson from 'topojson-client';
 import type { Mother } from '../types';
 
 interface UPDistrictMapProps {
@@ -7,79 +8,118 @@ interface UPDistrictMapProps {
   selectedDistrict?: string;
 }
 
-// Simplified SVG paths for key UP districts (stylized representation)
-const DISTRICT_PATHS: Record<string, { path: string; cx: number; cy: number }> = {
-  Lucknow: {
-    path: 'M 180 200 L 210 185 L 240 190 L 255 210 L 250 235 L 225 245 L 195 240 L 175 220 Z',
-    cx: 215, cy: 215,
-  },
-  Varanasi: {
-    path: 'M 320 250 L 350 235 L 380 240 L 390 260 L 385 285 L 360 295 L 330 290 L 315 270 Z',
-    cx: 352, cy: 265,
-  },
-  Agra: {
-    path: 'M 80 220 L 110 205 L 140 210 L 150 230 L 145 255 L 120 265 L 90 260 L 75 240 Z',
-    cx: 112, cy: 235,
-  },
-  Kanpur: {
-    path: 'M 155 260 L 185 248 L 210 255 L 218 275 L 212 295 L 190 303 L 162 298 L 150 278 Z',
-    cx: 184, cy: 275,
-  },
-  Prayagraj: {
-    path: 'M 255 255 L 285 242 L 310 248 L 320 268 L 314 290 L 292 298 L 264 293 L 250 273 Z',
-    cx: 284, cy: 270,
-  },
-  Gorakhpur: {
-    path: 'M 350 155 L 380 140 L 410 145 L 420 165 L 415 188 L 392 198 L 362 192 L 345 175 Z',
-    cx: 382, cy: 168,
-  },
-  Jhansi: {
-    path: 'M 85 290 L 115 278 L 140 283 L 148 300 L 142 320 L 120 328 L 94 323 L 80 305 Z',
-    cx: 114, cy: 303,
-  },
-  Bareilly: {
-    path: 'M 155 130 L 185 118 L 210 123 L 218 140 L 212 160 L 190 168 L 162 163 L 150 148 Z',
-    cx: 184, cy: 143,
-  },
-};
+interface DistrictFeature {
+  district: string;
+  path: string;
+  centroid: [number, number];
+}
+
+// Simple geo projection: Mercator-like scaling for UP's bounding box
+function projectPoint(lon: number, lat: number, bounds: { minLon: number; maxLon: number; minLat: number; maxLat: number }, width: number, height: number, padding: number): [number, number] {
+  const x = padding + ((lon - bounds.minLon) / (bounds.maxLon - bounds.minLon)) * (width - 2 * padding);
+  const y = padding + ((bounds.maxLat - lat) / (bounds.maxLat - bounds.minLat)) * (height - 2 * padding);
+  return [x, y];
+}
+
+function coordsToPath(coords: number[][][], bounds: { minLon: number; maxLon: number; minLat: number; maxLat: number }, width: number, height: number, padding: number): string {
+  return coords.map(ring => {
+    return ring.map((pt, i) => {
+      const [x, y] = projectPoint(pt[0], pt[1], bounds, width, height, padding);
+      return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ') + ' Z';
+  }).join(' ');
+}
+
+function getCentroid(coords: number[][][]): [number, number] {
+  let sumX = 0, sumY = 0, count = 0;
+  coords[0].forEach(pt => { sumX += pt[0]; sumY += pt[1]; count++; });
+  return [sumX / count, sumY / count];
+}
 
 function getRiskColor(hrpCount: number, total: number): string {
-  if (total === 0) return '#1e293b';
+  if (total === 0) return 'var(--bg-secondary)';
   const ratio = hrpCount / total;
-  if (ratio >= 0.5) return '#dc2626';   // red - very high
-  if (ratio >= 0.35) return '#ea580c';  // orange - high
-  if (ratio >= 0.2) return '#f59e0b';   // amber - moderate
-  if (ratio >= 0.1) return '#eab308';   // yellow - low-moderate
-  return '#22c55e';                      // green - low
+  if (ratio >= 0.5) return '#dc2626';
+  if (ratio >= 0.35) return '#ea580c';
+  if (ratio >= 0.2) return '#f59e0b';
+  if (ratio >= 0.1) return '#eab308';
+  return '#22c55e';
 }
 
-function getRiskGlow(hrpCount: number, total: number): string {
-  if (total === 0) return 'none';
-  const ratio = hrpCount / total;
-  if (ratio >= 0.5) return '0 0 12px rgba(220,38,38,0.6)';
-  if (ratio >= 0.35) return '0 0 10px rgba(234,88,12,0.5)';
-  return 'none';
-}
+const SVG_WIDTH = 560;
+const SVG_HEIGHT = 480;
+const PADDING = 20;
 
 export const UPDistrictMap: React.FC<UPDistrictMapProps> = ({ mothers, onDistrictClick, selectedDistrict }) => {
   const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
+  const [features, setFeatures] = useState<DistrictFeature[]>([]);
+  const [bounds, setBounds] = useState<{ minLon: number; maxLon: number; minLat: number; maxLat: number } | null>(null);
+
+  // Load and parse TopoJSON
+  useEffect(() => {
+    import('../data/up-districts.topo.json').then((topoData) => {
+      const geo = topojson.feature(topoData as any, (topoData as any).objects.districts) as any;
+
+      // Calculate bounds
+      let minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+      geo.features.forEach((f: any) => {
+        const coords = f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates.flat() : f.geometry.coordinates;
+        coords.forEach((ring: number[][]) => {
+          ring.forEach((pt: number[]) => {
+            if (pt[0] < minLon) minLon = pt[0];
+            if (pt[0] > maxLon) maxLon = pt[0];
+            if (pt[1] < minLat) minLat = pt[1];
+            if (pt[1] > maxLat) maxLat = pt[1];
+          });
+        });
+      });
+
+      const b = { minLon, maxLon, minLat, maxLat };
+      setBounds(b);
+
+      const parsed: DistrictFeature[] = geo.features.map((f: any) => {
+        const district = f.properties.district;
+        let path: string;
+        let centroidCoords: [number, number];
+
+        if (f.geometry.type === 'MultiPolygon') {
+          path = f.geometry.coordinates.map((poly: number[][][]) =>
+            coordsToPath(poly, b, SVG_WIDTH, SVG_HEIGHT, PADDING)
+          ).join(' ');
+          centroidCoords = getCentroid(f.geometry.coordinates[0]);
+        } else {
+          path = coordsToPath(f.geometry.coordinates, b, SVG_WIDTH, SVG_HEIGHT, PADDING);
+          centroidCoords = getCentroid(f.geometry.coordinates);
+        }
+
+        const [cx, cy] = projectPoint(centroidCoords[0], centroidCoords[1], b, SVG_WIDTH, SVG_HEIGHT, PADDING);
+        return { district, path, centroid: [cx, cy] as [number, number] };
+      });
+
+      setFeatures(parsed);
+    });
+  }, []);
 
   const districtData = useMemo(() => {
     const data: Record<string, { total: number; hrp: number; critical: number }> = {};
-    Object.keys(DISTRICT_PATHS).forEach(d => {
-      data[d] = { total: 0, hrp: 0, critical: 0 };
-    });
     mothers.forEach(m => {
-      if (data[m.district]) {
-        data[m.district].total++;
-        if (m.riskLevel === 'high' || m.riskLevel === 'critical') data[m.district].hrp++;
-        if (m.riskLevel === 'critical') data[m.district].critical++;
-      }
+      if (!data[m.district]) data[m.district] = { total: 0, hrp: 0, critical: 0 };
+      data[m.district].total++;
+      if (m.riskLevel === 'high' || m.riskLevel === 'critical') data[m.district].hrp++;
+      if (m.riskLevel === 'critical') data[m.district].critical++;
     });
     return data;
   }, [mothers]);
 
-  const tooltipData = hoveredDistrict ? districtData[hoveredDistrict] : null;
+  const tooltipData = hoveredDistrict ? (districtData[hoveredDistrict] || { total: 0, hrp: 0, critical: 0 }) : null;
+
+  if (features.length === 0) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', fontSize: 12 }}>
+        Loading map...
+      </div>
+    );
+  }
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -89,7 +129,7 @@ export const UPDistrictMap: React.FC<UPDistrictMapProps> = ({ mothers, onDistric
           Uttar Pradesh — HRP Heatmap
         </div>
         <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>
-          Click a district to filter • Color = HRP density
+          75 districts • Click to filter • Color = HRP density
         </div>
       </div>
 
@@ -126,53 +166,48 @@ export const UPDistrictMap: React.FC<UPDistrictMapProps> = ({ mothers, onDistric
               <span style={{ color: 'var(--text-secondary)' }}>Critical</span>
               <span style={{ fontWeight: 600, color: '#ef4444' }}>{tooltipData.critical}</span>
             </div>
-            <div style={{ marginTop: 4, paddingTop: 4, borderTop: '1px solid var(--border)', fontSize: 10, color: 'var(--text-muted)' }}>
-              HRP Rate: {tooltipData.total > 0 ? Math.round((tooltipData.hrp / tooltipData.total) * 100) : 0}%
-            </div>
+            {tooltipData.total > 0 && (
+              <div style={{ marginTop: 4, paddingTop: 4, borderTop: '1px solid var(--border)', fontSize: 10, color: 'var(--text-muted)' }}>
+                HRP Rate: {Math.round((tooltipData.hrp / tooltipData.total) * 100)}%
+              </div>
+            )}
           </div>
         </div>
       )}
 
       {/* SVG Map */}
-      <svg viewBox="0 0 480 380" style={{ width: '100%', height: '100%' }} aria-label="Uttar Pradesh district heatmap">
-        {/* Background shape representing UP outline */}
-        <path
-          d="M 50 100 Q 80 60 160 50 Q 250 40 350 55 Q 430 70 450 120 Q 460 180 440 240 Q 420 300 380 340 Q 320 370 250 360 Q 160 350 100 330 Q 60 310 45 260 Q 35 200 50 100 Z"
-          fill="var(--bg-secondary)"
-          stroke="var(--border)"
-          strokeWidth="1.5"
-          opacity="0.5"
-        />
-
-        {/* District regions */}
-        {Object.entries(DISTRICT_PATHS).map(([district, { path, cx, cy }]) => {
-          const data = districtData[district];
-          const color = getRiskColor(data.hrp, data.total);
+      <svg
+        viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
+        style={{ width: '100%', height: '100%' }}
+        aria-label="Uttar Pradesh district heatmap showing high-risk pregnancy distribution"
+      >
+        {features.map(({ district, path, centroid }) => {
+          const data = districtData[district] || { total: 0, hrp: 0, critical: 0 };
+          const color = data.total > 0 ? getRiskColor(data.hrp, data.total) : 'var(--bg-secondary)';
           const isHovered = hoveredDistrict === district;
           const isSelected = selectedDistrict === district;
           const hasCritical = data.critical > 0;
 
           return (
             <g key={district}>
-              {/* Pulse animation for critical districts */}
+              {/* Pulse for critical */}
               {hasCritical && (
-                <circle cx={cx} cy={cy} r="18" fill="none" stroke="#ef4444" strokeWidth="1.5" opacity="0.6">
-                  <animate attributeName="r" values="18;28;18" dur="2s" repeatCount="indefinite" />
+                <circle cx={centroid[0]} cy={centroid[1]} r="8" fill="none" stroke="#ef4444" strokeWidth="1.5" opacity="0.6">
+                  <animate attributeName="r" values="8;16;8" dur="2s" repeatCount="indefinite" />
                   <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite" />
                 </circle>
               )}
 
-              {/* District shape */}
+              {/* District path */}
               <path
                 d={path}
                 fill={color}
-                stroke={isSelected ? '#ffffff' : isHovered ? '#e2e8f0' : 'var(--border)'}
-                strokeWidth={isSelected ? 2.5 : isHovered ? 2 : 1}
-                opacity={isHovered || isSelected ? 1 : 0.85}
+                stroke={isSelected ? '#ffffff' : isHovered ? '#e2e8f0' : 'rgba(255,255,255,0.3)'}
+                strokeWidth={isSelected ? 2 : isHovered ? 1.5 : 0.5}
+                opacity={isHovered || isSelected ? 1 : 0.88}
                 style={{
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  filter: isHovered ? `drop-shadow(${getRiskGlow(data.hrp, data.total)})` : 'none',
+                  transition: 'opacity 0.15s, stroke-width 0.15s',
                 }}
                 onMouseEnter={() => setHoveredDistrict(district)}
                 onMouseLeave={() => setHoveredDistrict(null)}
@@ -181,39 +216,21 @@ export const UPDistrictMap: React.FC<UPDistrictMapProps> = ({ mothers, onDistric
                 aria-label={`${district}: ${data.total} pregnancies, ${data.hrp} high-risk`}
               />
 
-              {/* District label */}
-              <text
-                x={cx}
-                y={cy - 8}
-                textAnchor="middle"
-                fill="#ffffff"
-                fontSize="9"
-                fontWeight="700"
-                style={{ pointerEvents: 'none', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}
-              >
-                {district}
-              </text>
-              <text
-                x={cx}
-                y={cy + 6}
-                textAnchor="middle"
-                fill="#ffffff"
-                fontSize="11"
-                fontWeight="800"
-                style={{ pointerEvents: 'none', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}
-              >
-                {data.hrp}
-              </text>
-              <text
-                x={cx}
-                y={cy + 17}
-                textAnchor="middle"
-                fill="rgba(255,255,255,0.8)"
-                fontSize="7"
-                style={{ pointerEvents: 'none', textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}
-              >
-                HRP cases
-              </text>
+              {/* District label — only show for districts with data or when hovered */}
+              {(data.total > 0 || isHovered) && (
+                <text
+                  x={centroid[0]}
+                  y={centroid[1] + 1}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fill="#ffffff"
+                  fontSize="7"
+                  fontWeight="600"
+                  style={{ pointerEvents: 'none', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+                >
+                  {data.total > 0 ? `${district.slice(0, 8)}` : district.slice(0, 8)}
+                </text>
+              )}
             </g>
           );
         })}

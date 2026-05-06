@@ -78,7 +78,7 @@ export const MonitoringDashboard: React.FC<MonitoringDashboardProps> = ({
         <KPICard
           value={stats.total}
           label="Active Pregnancies"
-          trend={`${DISTRICTS.slice(0, 3).length} districts`}
+          trend={`${DISTRICTS.length} districts`}
           color="#3b82f6"
           icon="👶"
         />

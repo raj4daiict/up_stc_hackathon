@@ -1,6 +1,6 @@
 import type { Mother, Hospital, Ambulance, DistrictStats } from '../types';
 
-export const DISTRICTS = ['Lucknow', 'Varanasi', 'Agra', 'Kanpur', 'Prayagraj', 'Gorakhpur', 'Jhansi', 'Bareilly'];
+export const DISTRICTS = ['Lucknow', 'Varanasi', 'Agra', 'Kanpur', 'Prayagraj', 'Gorakhpur', 'Jhansi', 'Bareilly', 'Ghaziabad', 'Meerut', 'Aligarh', 'Moradabad', 'Sultanpur', 'Azamgarh', 'Ballia'];
 export const BLOCKS = ['Mohanlalganj', 'Bakshi Ka Talab', 'Sarojini Nagar', 'Chinhat', 'Malihabad', 'Kakori'];
 export const VILLAGES = [
   'Rampur Kalan', 'Sultanpur Khurd', 'Bhagwanpur', 'Govindpur', 'Shivdaspur',
@@ -70,7 +70,7 @@ export function generateMothers(count: number = 40): Mother[] {
       age: randomBetween(18, 38),
       village: randomFrom(VILLAGES),
       block: randomFrom(BLOCKS),
-      district: randomFrom(DISTRICTS.slice(0, 3)),
+      district: randomFrom(DISTRICTS.slice(0, 8)),
       phone: Math.random() > 0.3 ? `+91 ${randomBetween(70000, 99999)}${randomBetween(10000, 99999)}` : undefined,
       hasSmartphone: Math.random() > 0.55,
       gestationWeeks: gestWeeks,
@@ -118,7 +118,7 @@ export function generateAmbulances(): Ambulance[] {
 }
 
 export function generateDistrictStats(): DistrictStats[] {
-  return DISTRICTS.slice(0, 3).map(district => ({
+  return DISTRICTS.map(district => ({
     district,
     totalRegistered: randomBetween(800, 2500),
     highRisk: randomBetween(80, 300),

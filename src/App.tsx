@@ -177,7 +177,7 @@ function App() {
                   backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center',
                 }}>
                   <option value="all">All Districts</option>
-                  {DISTRICTS.slice(0, 3).map(d => <option key={d} value={d}>{d}</option>)}
+                  {DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
             </div>
